@@ -35,4 +35,25 @@ function loan() {
   };
 }
 
+function borrower(loan){
+  let account = {
+    monthlyIncome: 1350,
+    funds: 2800,
+    loan: loan
+  };
+  return {
+    getFunds: function(){
+      return account.funds;
+    },
+    makePayment: function(){
+      if(account.funds > loan.getMonthlyPayment())
+      {
+        account.funds -= loan.getMonthlyPayment();
+        loan.receivePayment(loan.getMonthlyPayment());
+      }
+    }
+  };
+}
+
 stevesLoan = loan();
+steve = borrower(stevesLoan);
