@@ -4,33 +4,7 @@ var stevesLoan;
 var month = 0;
 var monthsUntilEvicted;
 
-let borrower = function(loan) {
-  let account = {
-    monthlyIncome : 1350,
-    funds : 2800,
-    loan : loan
-  };
-  return {
-    getFunds : function() {
-      return account.funds;
-    },
-    makePayment : function() {
-      if (account.funds > loan.getMonthlyPayment())
-      {
-        account.funds -= loan.getMonthlyPayment();
-        loan.receivePayment(loan.getMonthlyPayment());
-      } else {
-        loan.receivePayment(account.funds);
-        account.funds = 0;
-      }
-    },
-    payDay : function() {
-      account.funds += account.monthlyIncome;
-    }
-  };
-};
-
-let loan = function() {
+function loan() {
   let account = {
     borrowed : 550000,
     balance : 286000,
@@ -50,7 +24,10 @@ let loan = function() {
       return account.balance;
     },
     receivePayment : function(amount) {
-
+      if (amount < account.monthlyPayment) {
+        missPayment();
+      }
+      account.balance -= amount;
     },
     getMonthlyPayment : function() {
       return account.monthlyPayment;
@@ -59,12 +36,38 @@ let loan = function() {
       return account.foreclosed;
     }
   };
-};
+}
+
+function borrower(loan) {
+  let account = {
+    monthlyIncome : 1350,
+    funds : 2800,
+    loan : loan
+  };
+  return {
+    getFunds : function() {
+      return account.funds;
+    },
+    makePayment : function() {
+      if (account.funds > account.loan.getMonthlyPayment())
+      {
+        account.funds -= account.loan.getMonthlyPayment();
+        account.loan.receivePayment(account.loan.getMonthlyPayment());
+      } else {
+        account.loan.receivePayment(account.funds);
+        account.funds = 0;
+      }
+    },
+    payDay : function() {
+      account.funds += account.monthlyIncome;
+    }
+  };
+}
 
 stevesLoan = loan();
 steve = borrower(stevesLoan);
 
-while (!stevesLoan.isForeclosed) {
+while (!stevesLoan.isForeclosed()) {
   steve.payDay();
   steve.makePayment();
   month++;
