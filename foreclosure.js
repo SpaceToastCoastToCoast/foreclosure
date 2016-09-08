@@ -20,18 +20,18 @@ function loan() {
     }
   }
   return {
-    getBalance: (function(){
+    getBalance : function(){
       return account.balance;
-    }),
-    receivePayment: (function(amount){
+    },
+    receivePayment : function(amount){
 
-    }),
-    getMonthlyPayment: (function(){
+    },
+    getMonthlyPayment : function(){
       return account.monthlyPayment;
-    }),
-    isForeclosed: (function(){
+    },
+    isForeclosed : function(){
       return account.foreclosed;
-    })
+    }
   };
 }
 
@@ -42,15 +42,21 @@ function borrower(loan){
     loan: loan
   };
   return {
-    getFunds: function(){
+    getFunds : function(){
       return account.funds;
     },
-    makePayment: function(){
+    makePayment : function(){
       if(account.funds > loan.getMonthlyPayment())
       {
         account.funds -= loan.getMonthlyPayment();
         loan.receivePayment(loan.getMonthlyPayment());
+      } else {
+        loan.receivePayment(account.funds);
+        account.funds = 0;
       }
+    },
+    payDay : function() {
+      account.funds += account.monthlyIncome;
     }
   };
 }
