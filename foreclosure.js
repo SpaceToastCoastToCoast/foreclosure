@@ -5,5 +5,34 @@ var month = 0;
 var monthsUntilEvicted;
 
 function loan() {
+  let account = {
+    borrowed: 550000,
+    balance: 286000,
+    monthlyPayment: 1700,
+    defaulted: 0,
+    defaultsToForeclose: 5,
+    foreclosed: false
+  };
+  function missPayment() {
+    account.defaulted++;
+    if(account.defaulted >= account.defaultsToForeclose){
+      account.foreclosed = true;
+    }
+  }
+  return {
+    getBalance: (function(){
+      return account.balance;
+    }),
+    receivePayment: (function(amount){
 
+    }),
+    getMonthlyPayment: (function(){
+      return account.monthlyPayment;
+    }),
+    isForeclosed: (function(){
+      return account.foreclosed;
+    })
+  };
 }
+
+stevesLoan = loan();
